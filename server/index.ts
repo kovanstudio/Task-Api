@@ -76,63 +76,76 @@ app.get("/generate", (req, res) => {
 });
 
 app.post("/item", async (req, res) => {
-  const input = req.body;
+  try {
+    const input = req.body;
 
-  const { error, value } = await Joi.object({
-    is_disabled: Joi.number().allow(1, 0).default(0),
-    is_reserved: Joi.number().allow(1, 0).default(0),
-    vehicle_type: Joi.string().required().valid("scooter", "bike"),
-    total_bookings: Joi.number().min(0).default(0),
-    lat: Joi.number(),
-    lon: Joi.number(),
-  }).validate(input);
+    const { error, value } = await Joi.object({
+      is_disabled: Joi.number().allow(1, 0).default(0),
+      is_reserved: Joi.number().allow(1, 0).default(0),
+      vehicle_type: Joi.string().required().valid("scooter", "bike"),
+      total_bookings: Joi.number().min(0).default(0),
+      lat: Joi.number(),
+      lon: Joi.number(),
+    }).validate(input);
 
-  if (error) {
-    res.status(400);
-    res.json({ success: false, message: error.details[0].message });
-    return;
+    if (error) {
+      res.status(400);
+      res.json({ success: false, message: error.details[0].message });
+      return;
+    }
+
+    const data = {
+      bike_id: randomstring.generate({
+        length: 5,
+        capitalization: "uppercase",
+      }),
+      ...input,
+    };
+
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500);
+    res.send("Someting went wrong.");
   }
-
-  const data = {
-    bike_id: randomstring.generate({ length: 5, capitalization: "uppercase" }),
-    ...input,
-  };
-
-  res.json({ success: true, data });
 });
 
 app.get("/items/:bike_id", async (req, res) => {
-  const json = JSON.parse(fs.readFileSync("data.json", "utf-8"));
+  try {
+    const json = JSON.parse(fs.readFileSync("data.json", "utf-8"));
 
-  json.last_updated = Date.now();
+    json.last_updated = Date.now();
 
-  const bike = json.data.bikes.filter(
-    (item: any) => item.bike_id === req.params.bike_id
-  );
+    const bike = json.data.bikes.filter(
+      (item: any) => item.bike_id === req.params.bike_id
+    );
 
-  delete json.data.bikes;
+    delete json.data.bikes;
 
-  if (Math.random() > 0.95) await waitFor(5000);
+    if (Math.random() > 0.95) await waitFor(5000);
 
-  if (Math.random() > 0.95) {
-    res.status(503);
-    res.send("The server is not ready to handle the request.");
-    return;
+    if (Math.random() > 0.95) {
+      res.status(503);
+      res.send("The server is not ready to handle the request.");
+      return;
+    }
+
+    json.data.bike = bike[0] || null;
+
+    if (Math.random() > 0.95) json.data.bike = undefined;
+
+    if (json.data.bike && json.data.bike.vehicle_type) {
+      if (Math.random() > 0.95) delete json.data.bike.vehicle_type;
+    }
+
+    json.last_updated = Date.now();
+
+    json.ttl = Math.floor(Math.random() * 41) + 20;
+
+    res.json(json);
+  } catch (error) {
+    res.status(500);
+    res.send("Someting went wrong.");
   }
-
-  json.data.bike = bike[0] || null;
-
-  if (Math.random() > 0.95) json.data.bike = undefined;
-
-  if (json.data.bike && json.data.bike.vehicle_type) {
-    if (Math.random() > 0.95) delete json.data.bike.vehicle_type;
-  }
-
-  json.last_updated = Date.now();
-
-  json.ttl = Math.floor(Math.random() * 41) + 20;
-
-  res.json(json);
 });
 
 app.listen(port, () => {
