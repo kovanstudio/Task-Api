@@ -30,11 +30,11 @@ app.get("/items", async (req, res) => {
 
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
+      json.nextPage = json.data.bikes.length > parseInt(page) * page_size;
       json.data.bikes = json.data.bikes.slice(
         (parseInt(page) - 1) * page_size,
         parseInt(page) * page_size
       );
-      json.nextPage = json.data.bikes.length > parseInt(page) * page_size;
     }
 
     for (let i = 0; i < json.data.bikes.length; i++) {
