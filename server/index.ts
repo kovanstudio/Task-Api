@@ -33,7 +33,7 @@ app.get("/items", async (req, res) => {
 
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
-      rate = 92;
+      rate = 85;
       if (!isNaN(size as any) && parseInt(size) > 0) {
         page_size = parseInt(size);
       }
