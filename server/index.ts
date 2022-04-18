@@ -39,7 +39,7 @@ app.get("/items", async (req, res) => {
     }
 
     for (let i = 0; i < json.data.bikes.length; i++) {
-      if (Math.random() > 0.98) {
+      if (Math.random() > 0.99) {
         json.data.bikes[i] = a[Math.floor(Math.random() * a.length)];
       } else {
         if (Math.random() > 0.9) {
