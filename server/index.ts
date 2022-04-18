@@ -29,9 +29,11 @@ app.get("/items", async (req, res) => {
 
     let page = req.query.page as string;
     let size = req.query.size as string;
+    let rate = 995;
 
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
+      rate = 92;
       if (!isNaN(size as any) && parseInt(size) > 0) {
         page_size = parseInt(size);
       }
@@ -43,10 +45,10 @@ app.get("/items", async (req, res) => {
     }
 
     for (let i = 0; i < json.data.bikes.length; i++) {
-      if (Math.random() > 0.95) {
+      if (Math.random() > rate) {
         json.data.bikes[i] = a[Math.floor(Math.random() * a.length)];
       } else {
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.85) {
           if (json.data.bikes[i].vehicle_type)
             delete json.data.bikes[i].vehicle_type;
         }
