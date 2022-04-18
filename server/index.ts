@@ -3,6 +3,11 @@ import helmet from "helmet";
 import cors from "cors";
 import fs from "fs";
 import { randomData, waitFor } from "./lib/randomData";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const port = parseInt(process.env.PORT || "8080", 10);
 
 const app = express();
 
@@ -64,6 +69,6 @@ app.get("/items/:bike_id", (req, res) => {
   res.json(json);
 });
 
-app.listen(8080, () => {
+app.listen(port, () => {
   console.log("Api started");
 });
