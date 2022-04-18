@@ -29,6 +29,15 @@ app.get("/items", async (req, res) => {
 
     let page = req.query.page as string;
     let size = req.query.size as string;
+    let vehicle_type = req.query.vehicle_type as string;
+
+    if (vehicle_type) {
+      json.data.bikes = json.data.bikes.filter(
+        (item: any) => item.vehicle_type === vehicle_type
+      );
+      json.total_count = json.data.bikes.length;
+    }
+
     let rate = 0.995;
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
@@ -36,6 +45,7 @@ app.get("/items", async (req, res) => {
       if (!isNaN(size as any) && parseInt(size) > 0) {
         page_size = parseInt(size);
       }
+
       json.nextPage = json.data.bikes.length > parseInt(page) * page_size;
       json.data.bikes = json.data.bikes.slice(
         (parseInt(page) - 1) * page_size,
