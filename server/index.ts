@@ -101,7 +101,7 @@ app.post("/item", async (req, res) => {
   res.json({ success: true, data });
 });
 
-app.get("/items/:bike_id", (req, res) => {
+app.get("/items/:bike_id", async (req, res) => {
   const json = JSON.parse(fs.readFileSync("data.json", "utf-8"));
 
   json.last_updated = Date.now();
@@ -112,7 +112,21 @@ app.get("/items/:bike_id", (req, res) => {
 
   delete json.data.bikes;
 
+  if (Math.random() > 0.95) await waitFor(5000);
+
+  if (Math.random() > 0.95) {
+    res.status(503);
+    res.send("The server is not ready to handle the request.");
+    return;
+  }
+
   json.data.bike = bike[0] || null;
+
+  if (Math.random() > 0.95) json.data.bike = undefined;
+
+  if (json.data.bike && json.data.bike.vehicle_type) {
+    if (Math.random() > 0.95) delete json.data.bike.vehicle_type;
+  }
 
   json.last_updated = Date.now();
 
