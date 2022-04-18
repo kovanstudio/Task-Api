@@ -34,6 +34,7 @@ app.get("/items", async (req, res) => {
         (parseInt(page) - 1) * page_size,
         parseInt(page) * page_size
       );
+      json.nextPage = json.data.bikes.length > parseInt(page) * page_size;
     }
 
     for (let i = 0; i < json.data.bikes.length; i++) {
