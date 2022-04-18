@@ -23,13 +23,18 @@ app.get("/items", async (req, res) => {
     const json = JSON.parse(fs.readFileSync("data.json", "utf-8"));
     json.last_updated = Date.now();
     json.ttl = Math.floor(Math.random() * 41) + 20;
+    json.total_count = json.data.bikes.length;
 
     const a = [null, undefined, {}];
 
     let page = req.query.page as string;
+    let size = req.query.size as string;
 
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
+      if (!isNaN(size as any) && parseInt(size) > 0) {
+        page_size = parseInt(size);
+      }
       json.nextPage = json.data.bikes.length > parseInt(page) * page_size;
       json.data.bikes = json.data.bikes.slice(
         (parseInt(page) - 1) * page_size,
