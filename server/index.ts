@@ -23,6 +23,16 @@ app.get("/items", async (req, res) => {
 
   const a = [null, undefined, {}];
 
+  let page = req.query.page as string;
+
+  if (!isNaN(page as any) && parseInt(page) > 0) {
+    let page_size = 10;
+    json.data.bikes = json.data.bikes.slice(
+      (parseInt(page) - 1) * page_size,
+      parseInt(page) * page_size
+    );
+  }
+
   for (let i = 0; i < json.data.bikes.length; i++) {
     if (Math.random() > 0.98) {
       json.data.bikes[i] = a[Math.floor(Math.random() * a.length)];
