@@ -18,8 +18,6 @@ app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
-const jsonData = JSON.parse(fs.readFileSync("data.json", "utf-8"));
-
 app.get("/items", async (req, res) => {
   try {
     const json = JSON.parse(fs.readFileSync("data.json", "utf-8"));
@@ -39,7 +37,7 @@ app.get("/items", async (req, res) => {
     }
 
     for (let i = 0; i < json.data.bikes.length; i++) {
-      if (Math.random() > 0.99) {
+      if (Math.random() > 0.995) {
         json.data.bikes[i] = a[Math.floor(Math.random() * a.length)];
       } else {
         if (Math.random() > 0.9) {
