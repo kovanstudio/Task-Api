@@ -25,10 +25,41 @@ app.get("/items", async (req, res) => {
     json.ttl = Math.floor(Math.random() * 41) + 20;
     json.total_count = json.data.bikes.length;
 
+    let bike_id = req.query.bike_id as string;
+
+    if (bike_id) {
+      json.last_updated = Date.now();
+
+      const bike = json.data.bikes.filter(
+        (item: any) => item.bike_id === bike_id
+      );
+
+      delete json.data.bikes;
+
+      if (Math.random() > 0.95) await waitFor(5000);
+
+      if (Math.random() > 0.95) {
+        res.status(503);
+        res.send("The server is not ready to handle the request.");
+        return;
+      }
+
+      json.data.bike = bike[0] || null;
+
+      if (Math.random() > 0.95) json.data.bike = undefined;
+
+      if (json.data.bike && json.data.bike.vehicle_type) {
+        if (Math.random() > 0.95) delete json.data.bike.vehicle_type;
+      }
+
+      res.json(json);
+    }
+
     const a = [null, undefined, {}];
 
     let page = req.query.page as string;
     let size = req.query.size as string;
+
     let vehicle_type = req.query.vehicle_type as string;
 
     if (vehicle_type) {
