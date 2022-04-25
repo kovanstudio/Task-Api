@@ -58,7 +58,7 @@ app.get("/items", async (req, res) => {
 
     const a = [null, undefined, {}];
 
-    let page = req.query.page as string;
+    let page = req.query.page ? (req.query.page as string) : "1";
     let size = req.query.size as string;
 
     let vehicle_type = req.query.vehicle_type as string;
