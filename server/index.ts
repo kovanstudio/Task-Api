@@ -53,6 +53,7 @@ app.get("/items", async (req, res) => {
       }
 
       res.json(json);
+      return;
     }
 
     const a = [null, undefined, {}];
