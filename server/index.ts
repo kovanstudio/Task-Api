@@ -70,7 +70,7 @@ app.get("/items", async (req, res) => {
       json.total_count = json.data.bikes.length;
     }
 
-    let rate = 0.995;
+    let rate = 0.997;
     if (!isNaN(page as any) && parseInt(page) > 0) {
       let page_size = 10;
       rate = 0.93;
